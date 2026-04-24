@@ -13,32 +13,23 @@
         h1 { margin-bottom: 5px; color: #4facfe; }
         p { color: #a0a0b0; margin-bottom: 30px; }
         
-        /* --- Analytics Container --- */
+        /* --- Simplified Analytics Container --- */
         .stats-container {
             display: flex;
             justify-content: center;
-            gap: 20px;
-            flex-wrap: wrap;
-            max-width: 1000px;
             margin: 0 auto 40px auto;
         }
 
         .counter-box { 
             background-color: #2a2a40; 
-            padding: 15px 25px; 
+            padding: 15px 50px; 
             border-radius: 10px; 
             border: 2px solid #4facfe;
-            min-width: 160px;
-            flex: 1;
             box-shadow: 0 4px 15px rgba(0,0,0,0.3);
         }
 
-        .box-title { font-size: 0.9rem; font-weight: bold; letter-spacing: 1px; color: #a0a0b0; margin-bottom: 5px;}
-        .counter-number { font-size: 2.5rem; font-weight: bold; color: #2ecc71; }
-        
-        /* Warning styles for Unparked Cars */
-        .warning-box { border-color: #f39c12; background-color: rgba(243, 156, 18, 0.1); }
-        .warning-text { color: #f39c12 !important; }
+        .box-title { font-size: 1rem; font-weight: bold; letter-spacing: 1px; color: #a0a0b0; margin-bottom: 5px;}
+        .counter-number { font-size: 3.5rem; font-weight: bold; color: #2ecc71; }
 
         /* --- 3x2 Grid Layout --- */
         .parking-lot { 
@@ -72,24 +63,12 @@
 <body>
 
     <h1>IIIT Smart Parking Dashboard</h1>
-    <p>Live Car Slots Monitoring System & Traffic Analytics</p>
+    <p>Live Car Slots Monitoring System</p>
 
     <div class="stats-container">
         <div class="counter-box">
             <div class="box-title">AVAILABLE SPOTS</div>
             <div id="spot-counter" class="counter-number">6</div>
-        </div>
-        <div class="counter-box">
-            <div class="box-title">TOTAL ENTERED</div>
-            <div id="entered-counter" class="counter-number" style="color: #3498db;">0</div>
-        </div>
-        <div class="counter-box">
-            <div class="box-title">CARS INSIDE</div>
-            <div id="inside-counter" class="counter-number" style="color: #9b59b6;">0</div>
-        </div>
-        <div id="unparked-box" class="counter-box">
-            <div class="box-title">UNPARKED CARS (DRIVING)</div>
-            <div id="unparked-counter" class="counter-number">0</div>
         </div>
     </div>
 
@@ -117,7 +96,7 @@
             const data = snapshot.val();
             if (!data) return; 
 
-            // 1. Calculate Available Slots
+            // Calculate Available Slots
             let availableCount = 0; 
             
             for (let i = 1; i <= 6; i++) {
@@ -139,46 +118,15 @@
                 }
             }
 
-            // 2. Extract Analytics from Firebase 'Stats' node
-            let totalEntered = 0;
-            let totalExited = 0;
-
-            if (data.Stats) {
-                totalEntered = data.Stats.TotalEntered || 0;
-                totalExited = data.Stats.TotalExited || 0;
-            }
-
-            // 3. Do the Math
-            let occupiedSlots = 6 - availableCount;
-            let carsInside = totalEntered - totalExited;
-            if (carsInside < 0) carsInside = 0; 
-
-            let unparkedCars = carsInside - occupiedSlots;
-            if (unparkedCars < 0) unparkedCars = 0; 
-
-            // 4. Update the Dashboard Text
+            // Update the Dashboard Text
             const spotCounter = document.getElementById('spot-counter');
             spotCounter.innerText = availableCount;
-            document.getElementById('entered-counter').innerText = totalEntered;
-            document.getElementById('inside-counter').innerText = carsInside;
-            
-            const unparkedCounter = document.getElementById('unparked-counter');
-            const unparkedBox = document.getElementById('unparked-box');
-            unparkedCounter.innerText = unparkedCars;
 
-            // 5. Dynamic Colors & Warnings
+            // Dynamic Colors for the main counter
             if (availableCount === 0) {
                 spotCounter.style.color = "#e74c3c";
             } else {
                 spotCounter.style.color = "#2ecc71";
-            }
-
-            if (unparkedCars > 0) {
-                unparkedBox.classList.add("warning-box");
-                unparkedCounter.classList.add("warning-text");
-            } else {
-                unparkedBox.classList.remove("warning-box");
-                unparkedCounter.classList.remove("warning-text");
             }
         });
     </script>
