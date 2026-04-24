@@ -11,42 +11,99 @@
     <style>
         body { font-family: 'Segoe UI', Tahoma, sans-serif; background-color: #1e1e2f; color: white; text-align: center; padding: 20px; }
         h1 { margin-bottom: 5px; color: #4facfe; }
-        p { color: #a0a0b0; margin-bottom: 20px; }
+        p { color: #a0a0b0; margin-bottom: 30px; }
         
-        /* The New Counter Style */
-        .counter-box { background-color: #2a2a40; display: inline-block; padding: 15px 40px; border-radius: 10px; margin-bottom: 30px; border: 2px solid #4facfe; }
-        .counter-number { font-size: 3rem; font-weight: bold; color: #2ecc71; }
+        /* --- Analytics Container --- */
+        .stats-container {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+            max-width: 1000px;
+            margin: 0 auto 40px auto;
+        }
+
+        .counter-box { 
+            background-color: #2a2a40; 
+            padding: 15px 25px; 
+            border-radius: 10px; 
+            border: 2px solid #4facfe;
+            min-width: 160px;
+            flex: 1;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        }
+
+        .box-title { font-size: 0.9rem; font-weight: bold; letter-spacing: 1px; color: #a0a0b0; margin-bottom: 5px;}
+        .counter-number { font-size: 2.5rem; font-weight: bold; color: #2ecc71; }
         
-        .parking-lot { display: flex; justify-content: center; gap: 20px; flex-wrap: wrap; max-width: 900px; margin: 0 auto; padding: 30px; background-color: #2a2a40; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
-        .slot { width: 130px; height: 200px; border: 3px dashed #555; border-radius: 10px; display: flex; flex-direction: column; justify-content: center; align-items: center; font-size: 1.2rem; font-weight: bold; transition: all 0.3s ease; }
+        /* Warning styles for Unparked Cars */
+        .warning-box { border-color: #f39c12; background-color: rgba(243, 156, 18, 0.1); }
+        .warning-text { color: #f39c12 !important; }
+
+        /* --- 3x2 Grid Layout --- */
+        .parking-lot { 
+            display: grid; 
+            grid-template-columns: repeat(3, 1fr); 
+            gap: 20px; 
+            max-width: 800px; 
+            margin: 0 auto; 
+            padding: 30px; 
+            background-color: #2a2a40; 
+            border-radius: 15px; 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5); 
+        }
+
+        @media (max-width: 768px) {
+            .parking-lot { grid-template-columns: repeat(2, 1fr); }
+        }
+        @media (max-width: 500px) {
+            .parking-lot { grid-template-columns: repeat(1, 1fr); }
+        }
+
+        .slot { height: 200px; border: 3px dashed #555; border-radius: 10px; display: flex; flex-direction: column; justify-content: center; align-items: center; transition: all 0.3s ease; }
         
         .empty { background-color: #2ecc71; color: #004d00; border-color: #2ecc71; box-shadow: 0 0 15px #2ecc7155; }
         .occupied { background-color: #e74c3c; color: #4d0000; border-color: #e74c3c; box-shadow: 0 0 15px #e74c3c55; }
-        .slot-name { font-size: 1.5rem; margin-bottom: 10px; }
+        .slot-name { font-size: 1.5rem; font-weight: bold; margin-bottom: 10px; }
         .sensor-type { font-size: 0.9rem; opacity: 0.8; margin-bottom: 15px; }
+        .status-text { font-size: 1.2rem; font-weight: bold;}
     </style>
 </head>
 <body>
 
     <h1>IIIT Smart Parking Dashboard</h1>
-    <p>Live Infrastructure Monitoring System</p>
+    <p>Live Car Slots Monitoring System & Traffic Analytics</p>
 
-    <div class="counter-box">
-        <div>AVAILABLE SPOTS</div>
-        <div id="spot-counter" class="counter-number">5</div>
+    <div class="stats-container">
+        <div class="counter-box">
+            <div class="box-title">AVAILABLE SPOTS</div>
+            <div id="spot-counter" class="counter-number">6</div>
+        </div>
+        <div class="counter-box">
+            <div class="box-title">TOTAL ENTERED</div>
+            <div id="entered-counter" class="counter-number" style="color: #3498db;">0</div>
+        </div>
+        <div class="counter-box">
+            <div class="box-title">CARS INSIDE</div>
+            <div id="inside-counter" class="counter-number" style="color: #9b59b6;">0</div>
+        </div>
+        <div id="unparked-box" class="counter-box">
+            <div class="box-title">UNPARKED CARS (DRIVING)</div>
+            <div id="unparked-counter" class="counter-number">0</div>
+        </div>
     </div>
 
     <div class="parking-lot">
-        <div id="Slot_1" class="slot empty"><div class="slot-name">Slot 1</div><div class="sensor-type">(IR)</div><div class="status-text">Empty</div></div>
-        <div id="Slot_2" class="slot empty"><div class="slot-name">Slot 2</div><div class="sensor-type">(IR)</div><div class="status-text">Empty</div></div>
+        <div id="Slot_1" class="slot empty"><div class="slot-name">Slot 1</div><div class="sensor-type">(Ultra)</div><div class="status-text">Empty</div></div>
+        <div id="Slot_2" class="slot empty"><div class="slot-name">Slot 2</div><div class="sensor-type">(Ultra)</div><div class="status-text">Empty</div></div>
         <div id="Slot_3" class="slot empty"><div class="slot-name">Slot 3</div><div class="sensor-type">(IR)</div><div class="status-text">Empty</div></div>
-        <div id="Slot_4" class="slot empty"><div class="slot-name">Slot 4</div><div class="sensor-type">(Ultra)</div><div class="status-text">Empty</div></div>
-        <div id="Slot_5" class="slot empty"><div class="slot-name">Slot 5</div><div class="sensor-type">(Ultra)</div><div class="status-text">Empty</div></div>
-        <div id="Slot_6" class="slot empty"><div class="slot-name">Slot 6</div><div class="sensor-type">(Ultra)</div><div class="status-text">Empty</div></div>
-    </div>
+        <div id="Slot_4" class="slot empty"><div class="slot-name">Slot 4</div><div class="sensor-type">(IR)</div><div class="status-text">Empty</div></div>
+        <div id="Slot_5" class="slot empty"><div class="slot-name">Slot 5</div><div class="sensor-type">(IR)</div><div class="status-text">Empty</div></div>
+        <div id="Slot_6" class="slot empty"><div class="slot-name">Slot 6</div><div class="sensor-type">(IR)</div><div class="status-text">Empty</div></div>
+    </div> 
 
     <script>
-        // PASTE YOUR KEYS HERE AGAIN
+        // Initialize Firebase
         const firebaseConfig = {
             apiKey: "AIzaSyCg9cUTKnjfENsodAE_m9cZpO-ShazfG3Q",
             databaseURL: "https://smartparking-7501c-default-rtdb.asia-southeast1.firebasedatabase.app"
@@ -58,35 +115,70 @@
 
         lotRef.on('value', (snapshot) => {
             const data = snapshot.val();
-            let availableCount = 0; // Reset counter every time data updates
+            if (!data) return; 
+
+            // 1. Calculate Available Slots
+            let availableCount = 0; 
             
-            if (data) {
-                for (const slotID in data) {
-                    const status = data[slotID];
-                    const slotElement = document.getElementById(slotID);
-                    
-                    if (status === "Empty") {
-                        availableCount++; // Add to counter if empty
-                    }
-                    
-                    if (slotElement) {
-                        slotElement.querySelector('.status-text').innerText = status;
-                        if (status === "Occupied") {
-                            slotElement.className = "slot occupied";
-                        } else {
-                            slotElement.className = "slot empty";
-                        }
+            for (let i = 1; i <= 6; i++) {
+                const slotID = `Slot_${i}`;
+                const status = data[slotID] || "Empty"; 
+                const slotElement = document.getElementById(slotID);
+                
+                if (status === "Empty") {
+                    availableCount++;
+                }
+                
+                if (slotElement) {
+                    slotElement.querySelector('.status-text').innerText = status;
+                    if (status === "Occupied") {
+                        slotElement.className = "slot occupied";
+                    } else {
+                        slotElement.className = "slot empty";
                     }
                 }
             }
-            // Update the giant counter number on the screen
-            document.getElementById('spot-counter').innerText = availableCount;
+
+            // 2. Extract Analytics from Firebase 'Stats' node
+            let totalEntered = 0;
+            let totalExited = 0;
+
+            if (data.Stats) {
+                totalEntered = data.Stats.TotalEntered || 0;
+                totalExited = data.Stats.TotalExited || 0;
+            }
+
+            // 3. Do the Math
+            let occupiedSlots = 6 - availableCount;
+            let carsInside = totalEntered - totalExited;
+            if (carsInside < 0) carsInside = 0; 
+
+            let unparkedCars = carsInside - occupiedSlots;
+            if (unparkedCars < 0) unparkedCars = 0; 
+
+            // 4. Update the Dashboard Text
+            const spotCounter = document.getElementById('spot-counter');
+            spotCounter.innerText = availableCount;
+            document.getElementById('entered-counter').innerText = totalEntered;
+            document.getElementById('inside-counter').innerText = carsInside;
             
-            // Turn counter red if lot is full!
+            const unparkedCounter = document.getElementById('unparked-counter');
+            const unparkedBox = document.getElementById('unparked-box');
+            unparkedCounter.innerText = unparkedCars;
+
+            // 5. Dynamic Colors & Warnings
             if (availableCount === 0) {
-                document.getElementById('spot-counter').style.color = "#e74c3c";
+                spotCounter.style.color = "#e74c3c";
             } else {
-                document.getElementById('spot-counter').style.color = "#2ecc71";
+                spotCounter.style.color = "#2ecc71";
+            }
+
+            if (unparkedCars > 0) {
+                unparkedBox.classList.add("warning-box");
+                unparkedCounter.classList.add("warning-text");
+            } else {
+                unparkedBox.classList.remove("warning-box");
+                unparkedCounter.classList.remove("warning-text");
             }
         });
     </script>
